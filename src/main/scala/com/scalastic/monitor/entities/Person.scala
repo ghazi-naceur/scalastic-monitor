@@ -10,7 +10,7 @@ case class Person(firstName: String, lastName: String, age: Int, occupation: Str
   }
 
   override def toString: String = "Person{" +
-    ", firstName='" + firstName + '\'' +
+    "firstName='" + firstName + '\'' +
     ", lastName='" + lastName + '\'' +
     ", age=" + age +
     ", occupation='" + occupation + '\'' +

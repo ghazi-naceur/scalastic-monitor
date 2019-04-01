@@ -5,11 +5,16 @@ import java.util.UUID
 import com.scalastic.monitor.client.ElasticsearchClient
 import org.elasticsearch.action.get.GetRequest
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
+import org.elasticsearch.action.search.SearchRequest
 import org.elasticsearch.action.update.{UpdateRequest, UpdateResponse}
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.xcontent.XContentFactory
+import org.elasticsearch.index.query.QueryBuilders
+import org.elasticsearch.search.SearchHit
+import org.elasticsearch.search.builder.SearchSourceBuilder
 
 import scala.collection.JavaConverters._
+import scala.collection.mutable.ListBuffer
 
 /**
   * Created by Ghazi Naceur on 30/03/2019
@@ -49,5 +54,20 @@ object ElasticsearchQueryBuilber {
     // asScala : to have a mutable map
     // map(kv => (kv._1,kv._2)).toMap : to get an immutable map
     response.getSource.asScala.map(kv => (kv._1, kv._2)).toMap
+  }
+
+  // TODO implement scan & scroll
+  def getAll(es_index: String): List[Map[String, AnyRef]] = {
+    var result = ListBuffer[Map[String, AnyRef]]()
+    val searchSourceBuilder = new SearchSourceBuilder
+    val builder = searchSourceBuilder.query(QueryBuilders.matchAllQuery())
+    val searchRequest = new SearchRequest(es_index)
+    searchRequest.source(builder)
+    val response = client.search(searchRequest, RequestOptions.DEFAULT)
+    response.getHits
+    for (hit: SearchHit <- response.getHits.getHits) {
+      result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
+    }
+    result.toList
   }
 }
