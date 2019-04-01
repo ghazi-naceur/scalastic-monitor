@@ -3,6 +3,7 @@ package com.scalastic.monitor.repo
 import java.util.UUID
 
 import com.scalastic.monitor.client.ElasticsearchClient
+import org.elasticsearch.action.delete.{DeleteRequest, DeleteResponse}
 import org.elasticsearch.action.get.GetRequest
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
 import org.elasticsearch.action.search.SearchRequest
@@ -69,5 +70,10 @@ object ElasticsearchQueryBuilber {
       result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
     }
     result.toList
+  }
+
+  def delete(es_index: String, es_type: String, id: String): DeleteResponse = {
+    val deleteRequest = new DeleteRequest(es_index, es_type, id)
+    client.delete(deleteRequest, RequestOptions.DEFAULT)
   }
 }

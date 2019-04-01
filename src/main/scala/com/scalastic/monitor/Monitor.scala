@@ -31,10 +31,15 @@ object Monitor {
 //    println(person3.toString)
 
 //    4- getAll :
-    val list = ElasticsearchQueryBuilber.getAll(PERSON_INDEX)
-    list.foreach(map => {
-      println(Person.toPerson(map).toString)
-    })
+//    val list = ElasticsearchQueryBuilber.getAll(PERSON_INDEX)
+//    list.foreach(map => {
+//      println(Person.toPerson(map).toString)
+//    })
+
+//    5- delete :
+    val response = ElasticsearchQueryBuilber.delete(PERSON_INDEX, PropertiesLoader.PERSON_TYPE, "00479fd3-c542-4148-af63-069948e92c32")
+    println(response.toString)
+    println(response.status())
 
 
   }
