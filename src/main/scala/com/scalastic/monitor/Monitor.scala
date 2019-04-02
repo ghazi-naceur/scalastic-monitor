@@ -41,9 +41,16 @@ object Monitor {
 //    println(response.toString)
 //    println(response.status())
 
-    //    6- findAll :
+    //    6- findAll : 9300
     val list = ElasticsearchQueryBuilber.findAll(PERSON_INDEX)
     list.foreach(map => {
+      println(Person.toPerson(map).toString)
+    })
+
+    // 7- search : 9200
+    val map = Map[String, Any]("lastName" -> "Netero", "occupation" -> "Hunter")
+    val persons = ElasticsearchQueryBuilber.search(PERSON_INDEX, map)
+    persons.foreach(map => {
       println(Person.toPerson(map).toString)
     })
   }

@@ -67,7 +67,6 @@ object ElasticsearchQueryBuilber {
     val searchRequest = new SearchRequest(es_index)
     searchRequest.source(builder)
     val response = client.search(searchRequest, RequestOptions.DEFAULT)
-    response.getHits
     for (hit: SearchHit <- response.getHits.getHits) {
       result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
     }
@@ -92,6 +91,22 @@ object ElasticsearchQueryBuilber {
       scrollResp = transportClient.prepareSearchScroll(scrollResp.getScrollId).setScroll(new TimeValue(60000)).execute().actionGet()
     } while (scrollResp.getHits.getHits.length != 0)
 
+    result.toList
+  }
+
+  def search(es_index: String, searchCriteria: Map[String, Any]): List[Map[String, AnyRef]] = {
+    var result = ListBuffer[Map[String, AnyRef]]()
+    val searchRequest = new SearchRequest(es_index)
+    val query = QueryBuilders.boolQuery()
+    for ((k, v) <- searchCriteria) {
+      query.must(QueryBuilders.matchPhraseQuery(k, v))
+    }
+    val builder = new SearchSourceBuilder().query(query).from(0).size(100)
+    searchRequest.source(builder)
+    val response = client.search(searchRequest, RequestOptions.DEFAULT)
+    for (hit: SearchHit <- response.getHits.getHits) {
+      result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
+    }
     result.toList
   }
 }
