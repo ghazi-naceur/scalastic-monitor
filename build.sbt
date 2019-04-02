@@ -11,5 +11,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play" % "2.6.11",
   "com.typesafe" % "config" % "1.3.2",
   "org.slf4j" % "slf4j-api" % "1.7.25",
-  "org.slf4j" % "slf4j-simple" % "1.7.25"
+  "org.slf4j" % "slf4j-simple" % "1.7.25",
+  "org.apache.logging.log4j" % "log4j-api" % "2.11.2",
+  "org.apache.logging.log4j" % "log4j-core" % "2.11.2"
 )
