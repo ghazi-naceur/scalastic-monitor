@@ -18,7 +18,7 @@ case class Person(firstName: String, lastName: String, age: Int, occupation: Str
 }
 
 object Person {
-  def toPerson(map: Map[String, AnyRef]): Person = {
+  def toPerson(map: Map[String, Any]): Person = {
     var mutFirstName: String = ""
     var mutLastName: String = ""
     var mutAge: Int = 0

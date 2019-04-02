@@ -27,8 +27,10 @@ object ElasticsearchQueryBuilber {
 
   val client: RestHighLevelClient = ElasticsearchClient.client
   val transportClient: TransportClient = ElasticsearchClient.transportClient
+  val from = 0
+  val size = 100
 
-  def insert(es_index: String, es_type: String, entity: Map[String, _]): IndexResponse = {
+  def insert(es_index: String, es_type: String, entity: Map[String, Any]): IndexResponse = {
     val request = new IndexRequest(es_index, es_type, UUID.randomUUID().toString)
     val builder = XContentFactory.jsonBuilder
     builder.startObject
@@ -40,7 +42,7 @@ object ElasticsearchQueryBuilber {
     client.index(request, RequestOptions.DEFAULT)
   }
 
-  def update(es_index: String, es_type: String, es_id: String, map: Map[String, _]): UpdateResponse = {
+  def update(es_index: String, es_type: String, es_id: String, map: Map[String, Any]): UpdateResponse = {
     val updateRequest = new UpdateRequest(es_index, es_type, es_id)
     val builder = XContentFactory.jsonBuilder
     builder.startObject
@@ -52,7 +54,7 @@ object ElasticsearchQueryBuilber {
     client.update(updateRequest, RequestOptions.DEFAULT)
   }
 
-  def getById(es_index: String, es_type: String, es_id: String): Map[String, AnyRef] = {
+  def getById(es_index: String, es_type: String, es_id: String): Map[String, Any] = {
     val getRequest = new GetRequest(es_index, es_type, es_id)
     val response = client.get(getRequest, RequestOptions.DEFAULT)
     // asScala : to have a mutable map
@@ -60,8 +62,8 @@ object ElasticsearchQueryBuilber {
     response.getSource.asScala.map(kv => (kv._1, kv._2)).toMap
   }
 
-  def getAll(es_index: String): List[Map[String, AnyRef]] = {
-    var result = ListBuffer[Map[String, AnyRef]]()
+  def getAll(es_index: String): List[Map[String, Any]] = {
+    var result = ListBuffer[Map[String, Any]]()
     val searchSourceBuilder = new SearchSourceBuilder
     val builder = searchSourceBuilder.query(QueryBuilders.matchAllQuery())
     val searchRequest = new SearchRequest(es_index)
@@ -78,8 +80,8 @@ object ElasticsearchQueryBuilber {
     client.delete(deleteRequest, RequestOptions.DEFAULT)
   }
 
-  def findAll(es_index: String): List[Map[String, AnyRef]] = {
-    var result = ListBuffer[Map[String, AnyRef]]()
+  def findAll(es_index: String): List[Map[String, Any]] = {
+    var result = ListBuffer[Map[String, Any]]()
     var scrollResp = transportClient.prepareSearch(es_index)
       .setScroll(new TimeValue(60000))
       .setQuery(QueryBuilders.matchAllQuery())
@@ -94,14 +96,26 @@ object ElasticsearchQueryBuilber {
     result.toList
   }
 
-  def search(es_index: String, searchCriteria: Map[String, Any]): List[Map[String, AnyRef]] = {
-    var result = ListBuffer[Map[String, AnyRef]]()
+  def search(es_index: String, searchCriteria: Map[String, Any]): List[Map[String, Any]] = {
+    var result = ListBuffer[Map[String, Any]]()
     val searchRequest = new SearchRequest(es_index)
     val query = QueryBuilders.boolQuery()
     for ((k, v) <- searchCriteria) {
       query.must(QueryBuilders.matchPhraseQuery(k, v))
     }
-    val builder = new SearchSourceBuilder().query(query).from(0).size(100)
+    val builder = new SearchSourceBuilder().query(query).from(from).size(size)
+    searchRequest.source(builder)
+    val response = client.search(searchRequest, RequestOptions.DEFAULT)
+    for (hit: SearchHit <- response.getHits.getHits) {
+      result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
+    }
+    result.toList
+  }
+
+  def getEntitiesFromIndexUsingMatchQuery(es_index: String, field: String, value: String): List[Map[String, Any]] = {
+    var result = ListBuffer[Map[String, Any]]()
+    val searchRequest = new SearchRequest(es_index)
+    val builder = new SearchSourceBuilder().query(QueryBuilders.matchQuery(field, value)).from(from).size(size)
     searchRequest.source(builder)
     val response = client.search(searchRequest, RequestOptions.DEFAULT)
     for (hit: SearchHit <- response.getHits.getHits) {
