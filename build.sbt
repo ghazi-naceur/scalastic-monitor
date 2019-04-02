@@ -6,6 +6,7 @@ scalaVersion := "2.12.8"
 
 libraryDependencies ++= Seq(
   "org.elasticsearch" % "elasticsearch" % "6.5.4",
+  "org.elasticsearch.client" % "transport" % "6.5.4",
   "org.elasticsearch.client" % "elasticsearch-rest-high-level-client" % "6.5.4",
   "com.typesafe.play" %% "play" % "2.6.11",
   "com.typesafe" % "config" % "1.3.2",

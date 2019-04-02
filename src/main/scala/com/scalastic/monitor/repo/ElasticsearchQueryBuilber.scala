@@ -8,7 +8,9 @@ import org.elasticsearch.action.get.GetRequest
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
 import org.elasticsearch.action.search.SearchRequest
 import org.elasticsearch.action.update.{UpdateRequest, UpdateResponse}
+import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
+import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.common.xcontent.XContentFactory
 import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.search.SearchHit
@@ -24,6 +26,7 @@ import scala.collection.mutable.ListBuffer
 object ElasticsearchQueryBuilber {
 
   val client: RestHighLevelClient = ElasticsearchClient.client
+  val transportClient: TransportClient = ElasticsearchClient.transportClient
 
   def insert(es_index: String, es_type: String, entity: Map[String, _]): IndexResponse = {
     val request = new IndexRequest(es_index, es_type, UUID.randomUUID().toString)
@@ -57,7 +60,6 @@ object ElasticsearchQueryBuilber {
     response.getSource.asScala.map(kv => (kv._1, kv._2)).toMap
   }
 
-  // TODO implement scan & scroll
   def getAll(es_index: String): List[Map[String, AnyRef]] = {
     var result = ListBuffer[Map[String, AnyRef]]()
     val searchSourceBuilder = new SearchSourceBuilder
@@ -75,5 +77,21 @@ object ElasticsearchQueryBuilber {
   def delete(es_index: String, es_type: String, id: String): DeleteResponse = {
     val deleteRequest = new DeleteRequest(es_index, es_type, id)
     client.delete(deleteRequest, RequestOptions.DEFAULT)
+  }
+
+  def findAll(es_index: String): List[Map[String, AnyRef]] = {
+    var result = ListBuffer[Map[String, AnyRef]]()
+    var scrollResp = transportClient.prepareSearch(es_index)
+      .setScroll(new TimeValue(60000))
+      .setQuery(QueryBuilders.matchAllQuery())
+      .setSize(100).get()
+    do {
+      for (hit: SearchHit <- scrollResp.getHits.getHits) {
+        result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
+      }
+      scrollResp = transportClient.prepareSearchScroll(scrollResp.getScrollId).setScroll(new TimeValue(60000)).execute().actionGet()
+    } while (scrollResp.getHits.getHits.length != 0)
+
+    result.toList
   }
 }
