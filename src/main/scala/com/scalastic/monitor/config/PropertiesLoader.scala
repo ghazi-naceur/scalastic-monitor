@@ -12,6 +12,8 @@ object PropertiesLoader {
   val HOST: String = CONFIG.getString("elasticsearch_host")
   val PORT: Int = CONFIG.getInt("elasticsearch_port")
   val HTTP_PORT: Int = CONFIG.getInt("elasticsearch_http_port")
-  val PERSON_INDEX: String = CONFIG.getString("persons_index")
-  val PERSON_TYPE: String = CONFIG.getString("persons_type")
+  val PERSON_INDEX: String = CONFIG.getString("person_index")
+  val PERSON_TYPE: String = CONFIG.getString("person_type")
+  val CITY_INDEX: String = CONFIG.getString("city_index")
+  val CITY_TYPE: String = CONFIG.getString("city_type")
 }

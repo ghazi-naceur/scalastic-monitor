@@ -1,8 +1,8 @@
 package com.scalastic.monitor
 
 import com.scalastic.monitor.config.PropertiesLoader
-import com.scalastic.monitor.config.PropertiesLoader.{PERSON_INDEX, PERSON_TYPE}
-import com.scalastic.monitor.entities.Person
+import com.scalastic.monitor.config.PropertiesLoader.{CITY_INDEX, PERSON_INDEX, PERSON_TYPE}
+import com.scalastic.monitor.entities.{City, Person}
 import com.scalastic.monitor.repo.ElasticsearchQueryBuilber
 
 /**
@@ -53,11 +53,35 @@ object Monitor {
 //        persons.foreach(map => {
 //          println(Person.toPerson(map).toString)
 //        })
-    // 8- get entities with match query :
-          val persons = ElasticsearchQueryBuilber.getEntitiesFromIndexUsingMatchQuery(PERSON_INDEX, "lastName", "Netero")
-          persons.foreach(map => {
-            println(Person.toPerson(map).toString)
-          })
+    // 8- getEntitiesFromIndexUsingMatchQuery :
+//          val persons = ElasticsearchQueryBuilber.getEntitiesFromIndexUsingMatchQuery(PERSON_INDEX, "lastName", "Netero")
+//          persons.foreach(map => {
+//            println(Person.toPerson(map).toString)
+//          })
+    // 9- getEntitiesFromIndexUsingTermQuery : 1st attempt
+//      val persons = ElasticsearchQueryBuilber.getEntitiesFromIndexUsingTermQuery(PERSON_INDEX, "lastName", "Netero")
+//      persons.foreach(map => {
+//        println(Person.toPerson(map).toString)
+//      })
+    // => This operation with "text" mapping (lastName) will return an empty result
+
+    // 10- getEntitiesFromIndexUsingTermQuery : 2nd attempt
+//    val city = City("Konoha", "some prefecture", "Hidden leaf", 5000)
+//    ElasticsearchQueryBuilber.insert(PropertiesLoader.CITY_INDEX, PropertiesLoader.CITY_TYPE, city.toMap())
+//    ElasticsearchQueryBuilber.insert(PropertiesLoader.CITY_INDEX, PropertiesLoader.CITY_TYPE, city.toMap())
+//    ElasticsearchQueryBuilber.insert(PropertiesLoader.CITY_INDEX, PropertiesLoader.CITY_TYPE, city.toMap())
+    // a :
+//      val cities = ElasticsearchQueryBuilber.getEntitiesFromIndexUsingTermQuery(CITY_INDEX, "name", "Konoha")
+//      cities.foreach(map => {
+//        println(City.toCity(map).toString)
+//      })
+    // => This operation with "keyword" mapping (name) will return a result
+    // b :
+//      val cities = ElasticsearchQueryBuilber.getEntitiesFromIndexUsingTermQuery(CITY_INDEX, "country", "Hidden leaf")
+//      cities.foreach(map => {
+//        println(City.toCity(map).toString)
+//      })
+    // => This operation with "text" mapping (country) will return an empty result
   }
 
 }

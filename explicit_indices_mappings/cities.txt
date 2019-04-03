@@ -1,0 +1,21 @@
+PUT http://localhost:9200/cities
+{
+  "mappings": {
+  "city": {
+    "properties": {
+      "name": {
+        "type": "keyword"
+      },
+      "prefecture": {
+        "type": "keyword"
+      },
+      "country": {
+        "type": "text"
+      },
+      "population": {
+        "type": "long"
+      }
+      }
+    }
+  }
+}

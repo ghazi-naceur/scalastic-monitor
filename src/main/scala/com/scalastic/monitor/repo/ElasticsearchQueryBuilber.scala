@@ -123,4 +123,16 @@ object ElasticsearchQueryBuilber {
     }
     result.toList
   }
+
+  def getEntitiesFromIndexUsingTermQuery(es_index: String, field: String, value: String): List[Map[String, Any]] = {
+    var result = ListBuffer[Map[String, Any]]()
+    val searchRequest = new SearchRequest(es_index)
+    val builder = new SearchSourceBuilder().query(QueryBuilders.termQuery(field, value)).from(from).size(size)
+    searchRequest.source(builder)
+    val response = client.search(searchRequest, RequestOptions.DEFAULT)
+    for (hit: SearchHit <- response.getHits.getHits) {
+      result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
+    }
+    result.toList
+  }
 }
