@@ -1,9 +1,16 @@
 package com.scalastic.monitor
 
+import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
+import akka.stream.ActorMaterializer
 import com.scalastic.monitor.config.PropertiesLoader
 import com.scalastic.monitor.config.PropertiesLoader.{CITY_INDEX, PERSON_INDEX, PERSON_TYPE}
 import com.scalastic.monitor.entities.{City, Person}
 import com.scalastic.monitor.repo.ElasticsearchQueryBuilber
+import com.scalastic.monitor.requests.HttpRequests
+
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
 /**
   * Created by Ghazi Naceur on 30/03/2019
@@ -93,6 +100,10 @@ object Monitor {
 //      cities2.foreach(map => {
 //        println(City.toCity(map).toString)
 //      })
+
+    // 12- Get http :
+    val indices = HttpRequests.getRequest("http://localhost:9200/_cat/indices?v")
+    println(indices)
   }
 
 }

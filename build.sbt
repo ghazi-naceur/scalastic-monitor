@@ -4,6 +4,9 @@ version := "0.1"
 
 scalaVersion := "2.12.8"
 
+lazy val akkaHttpVersion = "10.1.8"
+lazy val akkaVersion    = "2.5.22"
+
 libraryDependencies ++= Seq(
   "org.elasticsearch" % "elasticsearch" % "6.5.4",
   "org.elasticsearch.client" % "transport" % "6.5.4",
@@ -13,5 +16,11 @@ libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-api" % "1.7.25",
   "org.slf4j" % "slf4j-simple" % "1.7.25",
   "org.apache.logging.log4j" % "log4j-api" % "2.11.2",
-  "org.apache.logging.log4j" % "log4j-core" % "2.11.2"
+  "org.apache.logging.log4j" % "log4j-core" % "2.11.2",
+  "com.typesafe.akka" %% "akka-http"            % akkaHttpVersion,
+  "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
+  "com.typesafe.akka" %% "akka-http-xml"        % akkaHttpVersion,
+  "com.typesafe.akka" %% "akka-stream"          % akkaVersion,
+  "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+  "org.json4s" %% "json4s-native" % "3.5.0"
 )
