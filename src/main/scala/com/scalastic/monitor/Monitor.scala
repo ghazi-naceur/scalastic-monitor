@@ -82,6 +82,17 @@ object Monitor {
 //        println(City.toCity(map).toString)
 //      })
     // => This operation with "text" mapping (country) will return an empty result
+
+    // 11- getDocumentsFromIndexUsingPrefixQuery :
+//      val cities = ElasticsearchQueryBuilber.getDocumentsFromIndexUsingPrefixQuery(CITY_INDEX, "country", "som")
+//      cities.foreach(map => {
+//        println(City.toCity(map).toString)
+//      })
+    // To search with text and keyword fields, prefixQuery would be a good solution
+//      val cities2 = ElasticsearchQueryBuilber.getDocumentsFromIndexUsingPrefixQuery(CITY_INDEX, "prefecture", "som")
+//      cities2.foreach(map => {
+//        println(City.toCity(map).toString)
+//      })
   }
 
 }
