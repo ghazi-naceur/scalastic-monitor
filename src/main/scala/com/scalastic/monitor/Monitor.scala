@@ -7,7 +7,7 @@ import com.scalastic.monitor.config.PropertiesLoader
 import com.scalastic.monitor.config.PropertiesLoader.{CITY_INDEX, PERSON_INDEX, PERSON_TYPE}
 import com.scalastic.monitor.entities.{City, Person}
 import com.scalastic.monitor.repo.ElasticsearchQueryBuilber
-import com.scalastic.monitor.requests.HttpRequests
+import com.scalastic.monitor.requests.{ElasticMonitor, HttpRequests}
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -102,8 +102,80 @@ object Monitor {
 //      })
 
     // 12- Get http :
-    val indices = HttpRequests.getRequest("http://localhost:9200/_cat/indices?v")
-    println(indices)
+//    val indices = HttpRequests.getRequest("http://localhost:9200/_cat/indices?v")
+//    println(indices)
+
+    // 13- Get indices :
+//    val indices = ElasticMonitor.getIndices("localhost")
+//    println(indices)
+
+    // 14- Count docs :
+//    val countDocs = ElasticMonitor.countDocs("localhost", "persons")
+//    println(countDocs)
+
+    // 15- Show mapping :
+//    val mapping = ElasticMonitor.showMapping("localhost", "persons")
+//    println(mapping)
+
+    // 16- Search first page :
+//    val search = ElasticMonitor.searchFirstPage("localhost", "persons")
+//    println(search)
+
+    // 17- Get nodes :
+//    val nodes = ElasticMonitor.getEsNodes("localhost")
+//    println(nodes)
+
+    // 18- Get cluster health :
+//    val clusterHealth = ElasticMonitor.getClusterHealth("localhost")
+//    println(clusterHealth)
+
+    // 19- Get alias :
+//    val alias = ElasticMonitor.getAlias("localhost", "persons")
+//    println(alias)
+
+    // 20- Get thread pool :
+//    val threadPool = ElasticMonitor.getThreadPool("localhost")
+//    println(threadPool)
+
+    // 21- Get master node :
+//    val master = ElasticMonitor.getMasterNode("localhost")
+//    println(master)
+
+    // 22- Get Hard drive memory allocation :
+//    val hdMemory = ElasticMonitor.getHardDriveMemoryAllocation("localhost")
+//    println(hdMemory)
+
+    // 23- Get pending tasks :
+//    val pendingTasks = ElasticMonitor.getPendingTasks("localhost")
+//    println(pendingTasks)
+
+    // 24- Get segments :
+//    val segments = ElasticMonitor.getSegments("localhost", "persons")
+//    println(segments)
+
+    // 25- Get segments details :
+//    val segments = ElasticMonitor.getSegmentsDetails("localhost", "persons")
+//    println(segments)
+
+    // 26- Get node attrs :
+//    val nodeAttrs = ElasticMonitor.getNodeAttrs("localhost")
+//    println(nodeAttrs)
+
+    // 27- Get templates :
+//    val templates = ElasticMonitor.getTemplates("localhost")
+//    println(templates)
+
+    // 28- Get tasks :
+//    val tasks = ElasticMonitor.getTasks("localhost")
+//    println(tasks)
+
+    // 29- Get shards :
+//    val shards = ElasticMonitor.getShards("localhost", "persons")
+//    println(shards)
+
+    // 30- Get plugins :
+    val plugins = ElasticMonitor.getPlugins("localhost")
+    println(plugins)
   }
 
 }
