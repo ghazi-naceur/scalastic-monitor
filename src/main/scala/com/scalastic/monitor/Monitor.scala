@@ -6,8 +6,12 @@ import akka.stream.ActorMaterializer
 import com.scalastic.monitor.config.PropertiesLoader
 import com.scalastic.monitor.config.PropertiesLoader.{CITY_INDEX, PERSON_INDEX, PERSON_TYPE}
 import com.scalastic.monitor.entities.{City, Person}
+import com.scalastic.monitor.mail.Mailer
+//import com.scalastic.monitor.mail.{MailAgent, MailerService, MyMailerClient}
 import com.scalastic.monitor.repo.ElasticsearchQueryBuilber
 import com.scalastic.monitor.requests.{ElasticMonitor, HttpRequests}
+import javax.inject.Inject
+import play.api.libs.mailer.{Email, MailerClient}
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -174,8 +178,17 @@ object Monitor {
 //    println(shards)
 
     // 30- Get plugins :
-    val plugins = ElasticMonitor.getPlugins("localhost")
-    println(plugins)
+//    val plugins = ElasticMonitor.getPlugins("localhost")
+//    println(plugins)
+
+    // 31- Send mail :
+    val address = "account@gmail.com"
+    val password = "password"
+    val subject = "Elasticsearch Cluster Statistics"
+    val indices = ElasticMonitor.getIndices("localhost")
+    val hdMemory = ElasticMonitor.getHardDriveMemoryAllocation("localhost")
+    val text = indices + "\n" + hdMemory
+    Mailer.sendMail(address, password, subject, text)
   }
 
 }

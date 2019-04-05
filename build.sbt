@@ -22,5 +22,6 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-xml"        % akkaHttpVersion,
   "com.typesafe.akka" %% "akka-stream"          % akkaVersion,
   "com.typesafe.akka" %% "akka-actor" % akkaVersion,
-  "org.json4s" %% "json4s-native" % "3.5.0"
+  "org.json4s" %% "json4s-native" % "3.5.0",
+  "javax.mail" % "javax.mail-api" % "1.6.2"
 )
